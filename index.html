@@ -1,0 +1,219 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Gerador de Escala</title>
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <header class="app-header">
+    <div class="brand">
+      <div class="logo">E</div>
+      <div>
+        <h1>Escala Automática</h1>
+        <p id="saveStatus">Carregando sistema...</p>
+      </div>
+    </div>
+
+    <div class="header-actions">
+      <button class="btn ghost" id="btnColaboradores">Colaboradores</button>
+      <button class="btn ghost" id="btnHorarios">Horários</button>
+      <button class="btn ghost" id="btnCores">Cores</button>
+      <button class="btn primary" id="btnSalvar">Salvar</button>
+    </div>
+  </header>
+
+  <div id="dangerToast" class="danger-toast hidden"></div>
+
+  <main class="main">
+    <section class="control-panel">
+      <div class="field">
+        <span>Data inicial</span>
+        <input id="dataInicial" type="date" />
+      </div>
+
+      <div class="field small">
+        <span>Período</span>
+        <select id="quantidadeSemanas">
+          <option value="1">1 semana</option>
+          <option value="2" selected>2 semanas</option>
+          <option value="3">3 semanas</option>
+          <option value="4">4 semanas</option>
+        </select>
+      </div>
+
+      <div class="field small">
+        <span>Descanso</span>
+        <input id="descansoMinimo" value="11:30" />
+      </div>
+
+      <div class="field">
+        <span>Domingo</span>
+        <select id="domingoAutomatico">
+          <option value="padrao" selected>Padrão</option>
+          <option value="todos">Escalar todos</option>
+          <option value="folga">Folga para todos</option>
+        </select>
+      </div>
+
+      <div class="field">
+        <span>Geração</span>
+        <select id="modoGeracao">
+          <option value="manual" selected>Manual vazio</option>
+          <option value="sequencial">Sequencial</option>
+          <option value="aleatoria">Aleatória</option>
+        </select>
+      </div>
+
+      <div class="field">
+        <span>Validar cobertura</span>
+        <select id="validacaoCobertura">
+          <option value="tecnicos" selected>Só técnicos</option>
+          <option value="todos">Todos os cargos</option>
+          <option value="desativada">Não validar</option>
+        </select>
+      </div>
+
+      <button class="btn dark" id="btnGerar">Gerar escala</button>
+      <button class="btn danger" id="btnValidarRegras">Validar regras</button>
+      <button class="btn select" id="btnSelectMode">Selecionar dias</button>
+      <button class="btn" id="btnSelectAll">Selecionar tudo</button>
+      <button class="btn" id="btnClearSelection">Limpar seleção</button>
+      <button class="btn primary" id="btnEditSelected">Editar selecionados</button>
+      <button class="btn" id="btnExportarJPEG">JPEG</button>
+      <button class="btn whatsapp" id="btnWhatsApp">WhatsApp JPEG</button>
+      <button class="btn" id="btnCSV">CSV</button>
+      <button class="btn" id="btnImprimir">PDF</button>
+    </section>
+
+    <section class="preview-card">
+      <div class="preview-title">
+        <div>
+          <h2>Pré-visualização</h2>
+          <p>Clique em um horário para preencher manualmente. Use “Selecionar dias” ou “Selecionar tudo” e depois “Editar selecionados” para mudar vários campos de uma só vez. Os alertas aparecem apenas ao clicar em “Validar regras”. A cobertura pode ser validada só para técnicos, para todos ou desligada.</p>
+        </div>
+        <button class="btn danger" id="btnLimparAjustes">Limpar ajustes</button>
+      </div>
+
+      <div id="alertBox" class="alert hidden"></div>
+
+      <div class="sheet-wrap">
+        <div id="schedulePreview"></div>
+      </div>
+    </section>
+  </main>
+
+  <div class="modal" id="modalColaboradores" aria-hidden="true">
+    <div class="modal-content large">
+      <div class="modal-head">
+        <h3>Colaboradores</h3>
+        <button class="icon-btn" data-close="modalColaboradores">×</button>
+      </div>
+
+      <div id="employeesEditor" class="editor-list"></div>
+
+      <div class="add-row">
+        <input id="novoNome" placeholder="Nome do colaborador" />
+        <select id="novoCargo">
+          <option>Controlador de Operações</option>
+          <option>Supervisor Técnico</option>
+          <option>Téc.sistema Audio visual</option>
+          <option>Eletricista</option>
+        </select>
+        <button class="btn primary" id="btnAddEmployee">Adicionar</button>
+      </div>
+
+      <div class="modal-actions">
+        <button class="btn" id="btnAddBlank">Adicionar linha vazia</button>
+        <button class="btn dark" data-close="modalColaboradores">Concluir</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="modal" id="modalHorarios" aria-hidden="true">
+    <div class="modal-content large">
+      <div class="modal-head">
+        <h3>Horários por cargo</h3>
+        <button class="icon-btn" data-close="modalHorarios">×</button>
+      </div>
+
+      <p class="modal-help">Altere, adicione ou remova horários. Eles serão usados na próxima geração da escala.</p>
+      <div id="shiftsEditor" class="shift-editor"></div>
+
+      <div class="modal-actions">
+        <button class="btn primary" id="btnSaveShifts">Salvar horários</button>
+        <button class="btn dark" data-close="modalHorarios">Fechar</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="modal" id="modalCores" aria-hidden="true">
+    <div class="modal-content large">
+      <div class="modal-head">
+        <h3>Personalizar cores da tabela</h3>
+        <button class="icon-btn" data-close="modalCores">×</button>
+      </div>
+
+      <p class="modal-help">Altere a cor de cada item da tabela. As cores também serão usadas no JPEG e no PDF.</p>
+      <div id="colorEditor" class="color-editor"></div>
+
+      <div class="modal-actions">
+        <button class="btn danger" id="btnResetColors">Restaurar padrão</button>
+        <button class="btn primary" id="btnSaveColors">Salvar cores</button>
+        <button class="btn dark" data-close="modalCores">Fechar</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="modal" id="modalCell" aria-hidden="true">
+    <div class="modal-content">
+      <div class="modal-head">
+        <h3>Editar célula</h3>
+        <button class="icon-btn" data-close="modalCell">×</button>
+      </div>
+
+      <p id="cellInfo" class="modal-help"></p>
+
+      <label>Status rápido</label>
+      <div class="quick-grid">
+        <button class="quick" data-value="FOLGA">FOLGA</button>
+        <button class="quick" data-value="COMPENSANDO">COMPENSANDO</button>
+        <button class="quick" data-value="CURSO NR35">CURSO NR35</button>
+        <button class="quick" data-value="VIAGEM">VIAGEM</button>
+      </div>
+
+      <label>Horários pré-selecionáveis</label>
+      <div class="preset-row">
+        <select id="presetShiftSelect"></select>
+        <button class="btn" id="btnApplyPreset">Aplicar</button>
+      </div>
+
+      <label>Horário personalizado</label>
+      <div class="time-row">
+        <input id="cellStart" type="time" value="06:00" />
+        <span>às</span>
+        <input id="cellEnd" type="time" value="12:00" />
+        <button class="btn" id="btnApplyTime">Aplicar</button>
+      </div>
+
+      <label>Texto livre</label>
+      <input id="cellCustomText" placeholder="Ex: 09:00 – 13:00 ou OBSERVAÇÃO" />
+
+      <label>Cor desta célula</label>
+      <div class="cell-color-row">
+        <input id="cellColor" type="color" value="#e7f199" />
+        <button class="btn" id="btnApplyCellColor">Aplicar cor</button>
+        <button class="btn danger" id="btnClearCellColor">Remover cor</button>
+      </div>
+
+      <div class="modal-actions">
+        <button class="btn danger" id="btnClearCell">Limpar ajuste</button>
+        <button class="btn primary" id="btnSaveCell">Salvar célula</button>
+      </div>
+    </div>
+  </div>
+
+  <script src="app.js"></script>
+</body>
+</html>

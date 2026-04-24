@@ -1,0 +1,71 @@
+COMO USAR
+
+1. Extraia este ZIP.
+2. Abra a pasta extraida.
+3. Clique duas vezes em iniciar.bat
+
+OU pelo PowerShell:
+
+cd C:\Users\Alan\Downloads\gerador-escala-completo-v6
+npm start
+
+Depois abra no navegador:
+
+http://localhost:3000
+
+NOVIDADES DESTA VERSAO
+
+- Botao Cores para personalizar as cores da tabela.
+- Cor personalizada em cada celula da escala.
+- Quantidade de domingos com selecao 0º, 1º, 2º e 3º.
+- PDF melhorado em A4 paisagem.
+- Mantem JPEG, WhatsApp JPEG, CSV e salvamento automatico.
+
+As escalas salvas ficam em:
+data\state.json
+
+
+## Nova regra v7
+
+- Cada colaborador tem direito a pelo menos 1 FOLGA por semana.
+- A geração automática evita escalar o colaborador por 7 dias seguidos dentro da mesma semana.
+- Se uma alteração manual remover a folga semanal, o sistema mostra um alerta vermelho no canto superior da tela.
+
+
+Atualizações v8:
+- Selecionar tudo e edição em lote.
+- Alteração livre dos horários com validação posterior.
+- Validação de cobertura por horário, descanso mínimo de 11h30, folga semanal e 3 domingos consecutivos.
+- Campo de domingos somente para técnicos, com progressão automática 0º/1º/2º/3º.
+
+
+Atualizações v9:
+- Alerta vermelho ficou menor e no canto inferior, sem atrapalhar a tabela.
+- Horários alterados recebem cor automática obrigatória:
+  - 06:00 às 12:00: #d395a6
+  - 12:00 às 18:00: #76bb68
+  - 18:00 às 00:00: #d9ef6a
+  - 00:00 às 06:00: #ff000d
+- Adicionado parâmetro de geração Sequencial/Aleatória.
+- A geração aleatória tenta obedecer cobertura, descanso mínimo, folga semanal e domingos consecutivos.
+
+
+Atualizações v10:
+- Modo padrão agora é Manual vazio: a tabela nasce sem horários.
+- Os alertas de regras só aparecem ao clicar em Validar regras.
+- A edição de várias células foi corrigida: selecione os campos e use Editar selecionados, ou clique em uma célula já selecionada.
+- Alterações nas células não regeneram a escala automaticamente, então os horários preenchidos manualmente não são perdidos.
+
+
+Atualizações v11:
+- Adicionado campo "Validar cobertura".
+- Por padrão, a cobertura é validada apenas para Técnico de Sistemas Audio Visuais.
+- Assim, o sistema não cobra mais turno extra do Controlador de Operações, como 06:00–14:20, a menos que você escolha "Todos os cargos".
+- Você também pode desligar a validação de cobertura e manter apenas as validações de descanso, folga semanal e domingos consecutivos.
+
+
+Atualizações v12:
+- Ao alterar a quantidade de domingo de uma semana, as semanas seguintes do mesmo técnico são atualizadas automaticamente.
+  Exemplo: se a primeira semana ficar como 2º domingo, a próxima fica 3º domingo.
+- Aos domingos, o turno 00:00–06:00 dos técnicos não é mais obrigatório na validação de cobertura.
+- Na geração automática, o sistema também não força técnico no turno 00:00–06:00 aos domingos.
