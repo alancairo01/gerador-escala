@@ -1,4 +1,4 @@
-# Gerador de Escala Automática v6
+# Gerador de Escala Automática 
 
 Sistema em JavaScript + Node.js para geração e edição de escala.
 
@@ -14,7 +14,7 @@ Depois abra:
 http://localhost:3000
 ```
 
-## Melhorias desta versão
+## 
 
 - Personalização de cores por item da tabela.
 - Cor personalizada por célula da escala.
@@ -26,7 +26,7 @@ http://localhost:3000
 - Salvamento automático em `data/state.json`.
 
 
-## Nova regra v7
+## 
 
 - Cada colaborador tem direito a pelo menos 1 FOLGA por semana.
 - A geração automática evita escalar o colaborador por 7 dias seguidos dentro da mesma semana.
